@@ -1,1 +1,1 @@
-require('./1장 스레드와 잠금장치/index.js')();
+require('./2장 스레드와 잠금장치/index.js')();

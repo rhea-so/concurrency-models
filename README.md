@@ -39,6 +39,10 @@ JVM 언어를 사용하는 개발자에게 국한된 이야기가 아니었다.
 이 책의 초점은 실전적인 예제 코드를 기본으로 하고 있다. 책을 읽는 동안 예제 코드를 반드시 공부할 것을 권장한다.  
 실제로 동작하는 코드보다 더 확실한 공부는 없는 법이다.
 
+## 참고
+
+[동시성 프로그래밍 모델의 필요성](https://medium.com/@qwefgh90/%EC%83%88%EB%A1%9C%EC%9A%B4-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EB%AA%A8%EB%8D%B8%EC%9D%98-%ED%95%84%EC%9A%94%EC%84%B1-5682f91ebe4a)
+
 ## 도서
 
 [7가지 동시성 모델](http://mobile.kyobobook.co.kr/showcase/book/KOR/9788968482984?OV_REFFER=https://www.google.com)
