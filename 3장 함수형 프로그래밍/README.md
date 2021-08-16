@@ -59,7 +59,7 @@
 이것을 사용하면 소스 파일을 만들고 컴파일하는 과정이 없어도 코드를 입력해 바로 결과를 확인할 수 있다. 익숙하지 않은 코드를 실험적으로 사용할때 탁월한 도움을 주는 방법이다.  
 REPL을 시작하면 다음과 같은 프롬프트가 나타난다.
 
-```REPL
+```LISP
 user=>
 ```
 
@@ -67,21 +67,21 @@ user=>
 
 클로저 코드는 대부분 s- 표현이라고 불리는, 괄호로 표기되는 리스트로 구성된다. 대부분의 언어가 max(3, 5)라고 작성하는 함수 호출이 클로저에서는 다음과 같이 작성된다.
 
-```REPL
+```LISP
 user=> (max 3 5)
 5
 ```
 
 수학적 연산도 마찬가지다. 예를 들어 1+2*3은 다음과 같다.
 
-```REPL
+```LISP
 user=> (+ 1 (3 * 3))
 7
 ```
 
 상수를 선언하는 것은 def를 이용한다.
 
-```REPL
+```LISP
 user=> (def meaning-of-life 42)
 #'user/meaning-of-life
 user=> meaning-of-life
@@ -90,14 +90,14 @@ user=> meaning-of-life
 
 제어 구조마저 s- 표현을 사용한다.
 
-```REPL
+```LISP
 user=> (if (< meaning-of-life 0) "negative" "non-negative")
 "non-negative"
 ```
 
 클로저에서는 거의 대부분이 s- 표현이지만, 예외도 존재한다. 백터(배열) 리터럴은 대괄호로 표현된다.
 
-```REPL
+```LISP
 user=> (def droids ["Huey" "Dewey" "Louie"])
 #'user/droids
 user=> (count droids)
@@ -110,7 +110,7 @@ user=> (droids 2)
 
 맵 리터럴은 중괄호로 표현된다.
 
-```REPL
+```LISP
 user=> (def me {:name "Paul" :age 45 :sex :male})
 #'user/me
 user=> (:age me)
@@ -121,7 +121,7 @@ user=> (:age me)
 
 끝으로, 함수는 defn으로 정의하고, 인수는 벡터로 표현된다.
 
-```REPL
+```LISP
 user=> (defn percentage [x p] (* x (/ p 100.0)))
 #'user/percentage
 user=> (percentage 200 10)
@@ -149,7 +149,7 @@ function sum(numbers: number[]): number {
 
 accumulator의 상태가 변경되고 있기 때문에 이것은 함수적이지 않다. 그것은 루프가 돌 때마다 값이 달라진다. 다음 클로저 코드는 가변 변수를 사용하지 않는다.
 
-```REPL
+```LISP
 (defn recursive-sum [numbers])
   (if (empty? numbers)
     0
@@ -163,7 +163,7 @@ accumulator의 상태가 변경되고 있기 때문에 이것은 함수적이지
 
 이러한 재귀적 해법이 정확한 답을 찾아주긴 하지만, 더 나은 해법이 있다. 다음은 좀 더 간단하고 효과적인 해법이다.  
 
-```REPL
+```LISP
 (defn reduce-sum [numbers]
   (reduce (fn [acc x] (+ acc x)) 0 numbers))
 ```
@@ -177,7 +177,7 @@ accumulator의 상태가 변경되고 있기 때문에 이것은 함수적이지
 아직 끝난 것이 아니다. 우리는 두 개의 인수를 받아서 둘을 합한 결과를 리턴하는 함수로 +를 사용한다는 점에 주목할 필요가 있다.  
 익명의 함수를 만들 필요조차 없이 아예 +를 인수로 전달하면 더 좋은 코드를 작성할 수 있다.
 
-```REPL
+```LISP
 (defn sum [numbers]
   (reduce + numbers))
 ```
@@ -188,7 +188,7 @@ accumulator의 상태가 변경되고 있기 때문에 이것은 함수적이지
 
 함수 코드를 작성했으니, 이제 병렬성에 대해서 생각해볼 순서다. sum 함수를 병렬적으로 만들기 위해서 필요한 일이 무엇일까? 거의 없다.
 
-```REPL
+```LISP
 (ns sum.core
   (:require [clojure.core.reducers :as r]))
 
@@ -200,7 +200,7 @@ accumulator의 상태가 변경되고 있기 때문에 이것은 함수적이지
 
 다음은 이렇게 하는 것이 성능 측면에서 어떤 도움을 주는지 보여주기 위한 REPL 세션이다.
 
-```REPL
+```LISP
 sum.core=> (def numbers (into [] (range 0 10000000)))
 #'sum.core/numbers
 sum.core=> (time (sum numbers))
@@ -233,5 +233,98 @@ intro를 이용해 (range 0 10000000) 의 결과를 빈 벡터에 넣음으로�
 
 단어의 빈도를 담은 맵을 리턴할 것이기 때문에, 클로저의 맵 함수인 get과 assoc을 알아둘 필요가 있다.
 
+```LISP
+user=> (def counts {"apple" 2 "orange" 1})
+#'user/counts
+user=> (get counts "apple" 0)
+2
+user=> (get counts "banana" 0)
+0
+user=> (assoc counts "banana" 1)
+{"banana" 1, "orange" 1, "apple" 2}
+user=> (assoc counts "apple" 3)
+{"orange" 1, "apple" 3}
+```
+
+get은 주어진 키에 해당하는 내용을 맵에서 찾아본 후 해당하는 값이 있으면 그것을 리턴하고, 값이 없으면 기본 값을 리턴한다. assoc은 맵, 키, 그리고 값을 인수로 받은 다음 해당 키와 값이 포함된 맵을 새로 리턴한다.
+
+### 빈도
+
+이제 일련의 단어를 인수로 받아들이고 단어와 빈도를 담고 있는 맵을 리턴하는 함수를 작성할 준비가 되었다.
+
+```LISP
+(defn word-frequencies [words]
+  (reduce
+    (fn [counts word] (assoc counts word (inc (get counts word 0))))
+    {} words))
+```
+
+reduce에 초깃값으로 빈 맵 {}을 전달하고 있다. 그 다음에 words에 담긴 각 단어에 대해서 해당 단어의 빈도에 1을 더한다. 이 함수가 실제로 사용되는 예는 다음과 같다.
+
+```LISP
+user=> (word-frequencies ["one" "potato" "two" "potato" "three" "potato" "four"])
+{"one" 1, "potato" 3, "two" 1, "three" 1, "four" 1}
+```
+
+> (word-frequencies ["one", "potato", "two", "potato", "three", "potato", "four"])로 ,를 붙혀서 실행해도 아무 문제없이 동작한다.
+
+사실 클로저의 표준 라이브러리는 우리보다 한 발 빨랐다. 컬렉션을 받아들여서 그 안에 담긴 멤버들의 빈도를 담은 맵을 리턴하는 frequencies라는 이름의 표준 함수가 이미 존재한다.
+
+```LISP
+user=> (frequencies ["one" "potato" "two" "potato" "three" "potato" "four"])
+{"one" 1, "potato" 3, "two" 1, "three" 1, "four" 1}
+```
+
+이제 단어를 셀 수 있게 되었으므로, XML 처리와 관련된 일만 남았다.
+
+### 열과 관련된 추가적인 함수들
+
+XML을 처리하기 전에, 약간의 메커니즘을 소개할 필요가 있다. 먼저 map 함수다.
+
+```LISP
+user=> (map inc [0 1 2 3 4 5])
+(1 2 3 4 5 6)
+(map (fn [x] (* 2 x)) [0 1 2 3 4 5])
+(0 2 4 6 8 10)
+```
+
+map은 함수와 열이 주어지면 열에 담긴 각 요소에 함수를 적용한 결과를 담는 새로운 열을 리턴한다.  
+하나의 함수, 그리고 둘 이상의 인수를 받아들여서 부분적용 함수를 리턴하는 partial을 이용하면 두 번째 버전을 조금 더 단순하게 만들 수 있다.
+
+```LISP
+user=> (def multiply-by-2 (partial * 2))
+#'user/multiply-by-2
+user=> (multiply-by-2 3)
+6
+user=> (map (partial * 2) [0 1 2 3 4 5])
+(0 2 4 6 8 10)
+```
+
+이제 정규표현을 이용해서 문자열을 여러 개의 단어로 나누는 것과 같이 어떤 열을 리턴하는 함수가 있다고 하자.
+
+```LISP
+user=> (defn get-words [text] (re-seq #"\w+" text))
+#'user/get-words
+user=> (get-words "one two three four")
+("one" "two" "three" "four")
+```
+
+이 함수를 문자열로 이루어진 열에 매핑하면 열을 원소로 갖는 열을 얻게 된다.
+
+```LISP
+user=> (map get-words ["one two three" "four five six" "seven eight nine"])
+(("one" "two" "three") ("four" "five" "six") ("seven" "eight" "nine"))
+```
+
+모든 열의 원소들이 해체되어 하나로 연결된 열을 갖고 싶으면 mapcat을 사용하면 된다.
+
+```LISP
+user=> (mapcat get-words ["one two three" "four five six" "seven eight nine"])
+("one" "two" "three" "four" "five" "six" "seven" "eight" "nine")
+```
+
+이제 단어 세기 함수를 만들기 위해서 필요한 도구를 모두 갖추었다.
+
+> ... 각 페이지에 담긴 단어들의 빈도를 담은 맵을 리턴하는 등의 함수들은 생략.. 양이 너무 많습니다.
 
 
